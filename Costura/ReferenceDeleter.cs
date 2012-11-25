@@ -6,14 +6,12 @@ using System.IO;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ReferenceDeleter
 {
-    DependencyFinder dependencyFinder;
     InnerTask embedTask;
     Logger logger;
 
     [ImportingConstructor]
-    public ReferenceDeleter(DependencyFinder dependencyFinder, InnerTask embedTask, Logger logger)
+    public ReferenceDeleter(InnerTask embedTask, Logger logger)
     {
-        this.dependencyFinder = dependencyFinder;
         this.embedTask = embedTask;
         this.logger = logger;
     }
@@ -41,7 +39,7 @@ public class ReferenceDeleter
     IEnumerable<string> GetFileToDelete()
     {
         var directoryName = Path.GetDirectoryName(embedTask.TargetPath);
-        foreach (var dependency in dependencyFinder.Dependencies)
+        foreach (var dependency in embedTask.Dependencies)
         {
             var dependencyBinary = Path.Combine(directoryName, Path.GetFileName(dependency));
             if (File.Exists(dependencyBinary))

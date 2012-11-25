@@ -7,7 +7,7 @@ public class ResourceCaseFixer
     readonly InnerTask innerTask;
 
     [ImportingConstructor]
-    public ResourceCaseFixer(DependencyFinder dependencyFinder, Logger logger, InnerTask innerTask)
+    public ResourceCaseFixer(Logger logger, InnerTask innerTask)
     {
         this.innerTask = innerTask;
     }

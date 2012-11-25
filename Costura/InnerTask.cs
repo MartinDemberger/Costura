@@ -24,6 +24,7 @@ public partial class InnerTask
     Logger logger;
     static Version version;
     AssemblyResolver assemblyResolver;
+    BuildEnginePropertyExtractor buildEnginePropertyExtractor;
 
     static InnerTask()
     {
@@ -97,6 +98,7 @@ public partial class InnerTask
 
 
             assemblyResolver = container.GetExportedValue<AssemblyResolver>();
+            buildEnginePropertyExtractor = container.GetExportedValue<BuildEnginePropertyExtractor>();
             assemblyResolver.Execute();
             ReadModule();
 
@@ -109,7 +111,7 @@ public partial class InnerTask
 
             ImportAssemblyLoader();
             ImportModuleLoader();
-            container.GetExportedValue<DependencyFinder>().Execute();
+            FindDependencies();
             container.GetExportedValue<ProjectKeyReader>().Execute();
             container.GetExportedValue<ResourceCaseFixer>().Execute();
             using (var resourceEmbedder = container.GetExportedValue<ResourceEmbedder>())

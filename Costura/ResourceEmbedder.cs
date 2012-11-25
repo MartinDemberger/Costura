@@ -7,23 +7,21 @@ using Mono.Cecil;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ResourceEmbedder : IDisposable
 {
-    DependencyFinder dependencyFinder;
     InnerTask embedTask;
     List<Stream> streams;
     Logger logger;
 
     [ImportingConstructor]
-    public ResourceEmbedder(DependencyFinder dependencyFinder, InnerTask embedTask, Logger logger)
+    public ResourceEmbedder(InnerTask embedTask, Logger logger)
     {
         streams = new List<Stream>();
-        this.dependencyFinder = dependencyFinder;
         this.embedTask = embedTask;
         this.logger = logger;
     }
 
     public void Execute()
     {
-        foreach (var dependency in dependencyFinder.Dependencies)
+        foreach (var dependency in embedTask.Dependencies)
         {
             var fullPath = Path.GetFullPath(dependency);
             Embedd(fullPath);
