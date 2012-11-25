@@ -31,6 +31,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EmbedTestAssemblies\AssemblyToProcess\AssemblyToProcess.csproj">
+      <Project>{a9631b7b-1eb6-4fb6-b065-f902a20e3629}</Project>
+      <Name>AssemblyToProcess</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\EmbedTestAssemblies\AssemblyToProcess\AssemblyToReference.csproj">
+      <Project>{67091480-17b3-4284-80a1-158587e08df9}</Project>
+      <Name>AssemblyToReference</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\EmbedTestAssemblies\AssemblyToProcess\AssemblyToReferencePreEmbed.csproj">
+      <Project>{9c08ace9-fa6f-49a6-ad84-4c51b29ade1c}</Project>
+      <Name>AssemblyToReferencePreEmbed</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\EmbedTestAssemblies\AssemblyWithLoadNonExistentAssembly\AssemblyWithLoadNonExistentAssembly.csproj">
+      <Project>{82934e4c-22e9-497b-85e0-3083ba41aab8}</Project>
+      <Name>AssemblyWithLoadNonExistentAssembly</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
