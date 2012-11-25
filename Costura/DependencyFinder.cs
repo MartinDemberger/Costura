@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Costura;
 using Microsoft.Build.Framework;
 
 [Export, PartCreationPolicy(CreationPolicy.Shared)]

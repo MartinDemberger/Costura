@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reflection;
-using Costura;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 

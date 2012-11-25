@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.IO;
-using Costura;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Mdb;

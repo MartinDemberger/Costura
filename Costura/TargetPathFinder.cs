@@ -2,7 +2,6 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using Costura;
 
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class TargetPathFinder

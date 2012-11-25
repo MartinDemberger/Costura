@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using Costura;
 
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ProjectKeyReader

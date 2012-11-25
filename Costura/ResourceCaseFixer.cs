@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.Composition;
-using Costura;
 
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ResourceCaseFixer
