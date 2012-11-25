@@ -8,14 +8,12 @@ using Mono.Cecil.Pdb;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ModuleWriter
 {
-    ProjectKeyReader projectKeyReader;
     Logger logger;
     InnerTask config;
 
     [ImportingConstructor]
-    public ModuleWriter(ProjectKeyReader projectKeyReader, Logger logger, InnerTask config)
+    public ModuleWriter(Logger logger, InnerTask config)
     {
-        this.projectKeyReader = projectKeyReader;
         this.logger = logger;
         this.config = config;
     }
@@ -43,7 +41,7 @@ public class ModuleWriter
 
     public void Execute(string targetPath)
     {
-        if (projectKeyReader.StrongNameKeyPair == null)
+        if (config.StrongNameKeyPair == null)
         {
             logger.LogMessage(string.Format("\tSaving assembly to '{0}'.", targetPath));
         }
@@ -53,7 +51,7 @@ public class ModuleWriter
         }
         var parameters = new WriterParameters
                              {
-                                 StrongNameKeyPair = projectKeyReader.StrongNameKeyPair,
+                                 StrongNameKeyPair = config.StrongNameKeyPair,
                                  WriteSymbols = true,
                                  SymbolWriterProvider = GetSymbolWriterProvider(config.TargetPath)
                              };

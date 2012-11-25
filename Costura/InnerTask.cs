@@ -112,7 +112,7 @@ public partial class InnerTask
             ImportAssemblyLoader();
             ImportModuleLoader();
             FindDependencies();
-            container.GetExportedValue<ProjectKeyReader>().Execute();
+            ReadProjectKey();
             container.GetExportedValue<ResourceCaseFixer>().Execute();
             using (var resourceEmbedder = container.GetExportedValue<ResourceEmbedder>())
             {

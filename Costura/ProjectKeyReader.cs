@@ -6,17 +6,8 @@ using System.Reflection;
 using System.Xml.Linq;
 
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class ProjectKeyReader
+public partial class InnerTask
 {
-    BuildEnginePropertyExtractor buildEnginePropertyExtractor;
-    InnerTask config;
-
-    [ImportingConstructor]
-    public ProjectKeyReader(BuildEnginePropertyExtractor buildEnginePropertyExtractor, InnerTask config)
-    {
-        this.buildEnginePropertyExtractor = buildEnginePropertyExtractor;
-        this.config = config;
-    }
 
     public StrongNameKeyPair StrongNameKeyPair { get; set; }
 
@@ -39,9 +30,9 @@ public class ProjectKeyReader
         return string.Equals(signAssembly, "true", StringComparison.OrdinalIgnoreCase);
     }
 
-    public void Execute()
+    public void ReadProjectKey()
     {
-        if (config.KeyFilePath == null)
+        if (KeyFilePath == null)
         {
             var projectFilePath = buildEnginePropertyExtractor.GetProjectPath();
             if (!IsSignAssemblyTrue(projectFilePath))
@@ -54,9 +45,9 @@ public class ProjectKeyReader
             {
                 return;
             }
-            config.KeyFilePath = Path.Combine(Path.GetDirectoryName(projectFilePath), assemblyOriginatorKeyFile);
+            KeyFilePath = Path.Combine(Path.GetDirectoryName(projectFilePath), assemblyOriginatorKeyFile);
         }
 
-        StrongNameKeyPair = new StrongNameKeyPair(File.OpenRead(config.KeyFilePath));
+        StrongNameKeyPair = new StrongNameKeyPair(File.OpenRead(KeyFilePath));
     }
 }
