@@ -1,22 +1,11 @@
-﻿using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Mdb;
 using Mono.Cecil.Pdb;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class ModuleWriter
+public partial class InnerTask
 {
-    Logger logger;
-    InnerTask config;
-
-    [ImportingConstructor]
-    public ModuleWriter(Logger logger, InnerTask config)
-    {
-        this.logger = logger;
-        this.config = config;
-    }
 
     static ISymbolWriterProvider GetSymbolWriterProvider(string targetPath)
     {
@@ -34,14 +23,10 @@ public class ModuleWriter
         return null;
     }
 
-    public void Execute()
-    {
-        Execute(config.TargetPath);
-    }
 
-    public void Execute(string targetPath)
+    public void WriteModule(string targetPath)
     {
-        if (config.StrongNameKeyPair == null)
+        if (StrongNameKeyPair == null)
         {
             logger.LogMessage(string.Format("\tSaving assembly to '{0}'.", targetPath));
         }
@@ -51,10 +36,10 @@ public class ModuleWriter
         }
         var parameters = new WriterParameters
                              {
-                                 StrongNameKeyPair = config.StrongNameKeyPair,
+                                 StrongNameKeyPair = StrongNameKeyPair,
                                  WriteSymbols = true,
-                                 SymbolWriterProvider = GetSymbolWriterProvider(config.TargetPath)
+                                 SymbolWriterProvider = GetSymbolWriterProvider(TargetPath)
                              };
-        config.Module.Write(targetPath, parameters);
+        Module.Write(targetPath, parameters);
     }
 }

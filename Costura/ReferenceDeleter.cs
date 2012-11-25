@@ -1,24 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class ReferenceDeleter
+public partial class InnerTask
 {
-    InnerTask embedTask;
-    Logger logger;
 
-    [ImportingConstructor]
-    public ReferenceDeleter(InnerTask embedTask, Logger logger)
+    public void DeleteTheReferences()
     {
-        this.embedTask = embedTask;
-        this.logger = logger;
-    }
-
-    public void Execute()
-    {
-        if (!embedTask.DeleteReferences)
+        if (!DeleteReferences)
         {
             return;
         }
@@ -38,8 +27,8 @@ public class ReferenceDeleter
 
     IEnumerable<string> GetFileToDelete()
     {
-        var directoryName = Path.GetDirectoryName(embedTask.TargetPath);
-        foreach (var dependency in embedTask.Dependencies)
+        var directoryName = Path.GetDirectoryName(TargetPath);
+        foreach (var dependency in Dependencies)
         {
             var dependencyBinary = Path.Combine(directoryName, Path.GetFileName(dependency));
             if (File.Exists(dependencyBinary))

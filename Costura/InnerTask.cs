@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Build.Framework;
@@ -24,8 +22,7 @@ public partial class InnerTask
     Logger logger;
     static Version version;
     AssemblyResolver assemblyResolver;
-    BuildEnginePropertyExtractor buildEnginePropertyExtractor;
-
+    
     static InnerTask()
     {
         version = typeof(InnerTask).Assembly.GetName().Version;
@@ -85,43 +82,35 @@ public partial class InnerTask
 
     void Inner()
     {
-        using (var catalog = new AssemblyCatalog(GetType().Assembly))
-        using (var container = new CompositionContainer(catalog))
+        CheckForInvalidConfig();
+        FindTargetPath();
+
+        logger.LogMessage(string.Format("\tTargetPath: {0}", TargetPath));
+
+
+        assemblyResolver = new AssemblyResolver(this, logger);
+        assemblyResolver.Execute();
+        ReadModule();
+
+        if (!ShouldStart())
         {
-            container.ComposeExportedValue(this);
-            container.ComposeExportedValue(BuildEngine);
-            container.ComposeExportedValue(logger);
-            CheckForInvalidConfig();
-            container.GetExportedValue<TargetPathFinder>().Execute();
-
-            logger.LogMessage(string.Format("\tTargetPath: {0}", TargetPath));
-
-
-            assemblyResolver = container.GetExportedValue<AssemblyResolver>();
-            buildEnginePropertyExtractor = container.GetExportedValue<BuildEnginePropertyExtractor>();
-            assemblyResolver.Execute();
-            ReadModule();
-
-            if (!ShouldStart())
-            {
-                return;
-            }
-
-            FindMsCoreReferences();
-
-            ImportAssemblyLoader();
-            ImportModuleLoader();
-            FindDependencies();
-            ReadProjectKey();
-            container.GetExportedValue<ResourceCaseFixer>().Execute();
-            using (var resourceEmbedder = container.GetExportedValue<ResourceEmbedder>())
-            {
-                resourceEmbedder.Execute();
-                var savePath = GetSavePath();
-                container.GetExportedValue<ModuleWriter>().Execute(savePath);
-            }
-            container.GetExportedValue<ReferenceDeleter>().Execute();
+            return;
         }
+
+        FindMsCoreReferences();
+
+        ImportAssemblyLoader();
+        ImportModuleLoader();
+        FindDependencies();
+        ReadProjectKey();
+        FixResourceCase();
+        using (var resourceEmbedder = new ResourceEmbedder(this,logger))
+        {
+            resourceEmbedder.Execute();
+            var savePath = GetSavePath();
+            WriteModule(savePath);
+        }
+        DeleteTheReferences();
     }
 
     void CheckForInvalidConfig()

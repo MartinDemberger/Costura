@@ -1,28 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Reflection;
 using System.Linq;
 using Mono.Cecil;
 
-[Export(typeof(AssemblyResolver))]
-[Export(typeof(IAssemblyResolver))]
-[PartCreationPolicy(CreationPolicy.Shared)]
 public class AssemblyResolver : IAssemblyResolver
 {
     InnerTask config;
     Logger logger;
-    BuildEnginePropertyExtractor buildEnginePropertyExtractor;
     Dictionary<string, string> references;
     Dictionary<string, AssemblyDefinition> assemblyDefinitionCache;
 
-    [ImportingConstructor]
-    public AssemblyResolver(InnerTask config, Logger logger, BuildEnginePropertyExtractor buildEnginePropertyExtractor)
+    public AssemblyResolver(InnerTask config, Logger logger)
     {
         this.config = config;
         this.logger = logger;
-        this.buildEnginePropertyExtractor = buildEnginePropertyExtractor;
         assemblyDefinitionCache = new Dictionary<string, AssemblyDefinition>(StringComparer.OrdinalIgnoreCase);
     }
 
@@ -129,7 +122,7 @@ public class AssemblyResolver : IAssemblyResolver
         {
             try
             {
-                SetRefDictionary(buildEnginePropertyExtractor.GetEnvironmentVariable("ReferencePath", true));
+                SetRefDictionary(config.GetEnvironmentVariable("ReferencePath", true));
                 logger.LogMessage("\tYou did not define the WeavingTask.References. So references were extracted from the BuildEngine. Reference count=" + references.Count);
             }
             catch (Exception exception)

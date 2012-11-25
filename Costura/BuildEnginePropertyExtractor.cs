@@ -1,27 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class BuildEnginePropertyExtractor
+public partial class InnerTask
 {
-    IBuildEngine buildEngine;
-
-    public BuildEnginePropertyExtractor()
-    {
-    }
-
-    [ImportingConstructor]
-    public BuildEnginePropertyExtractor(IBuildEngine buildEngine)
-    {
-        this.buildEngine = buildEngine;
-    }
-
     const BindingFlags bindingFlags = BindingFlags.NonPublic |
                                       BindingFlags.FlattenHierarchy |
                                       BindingFlags.Instance |
@@ -29,13 +14,13 @@ public class BuildEnginePropertyExtractor
 
     public virtual ProjectInstance GetProjectInstance()
     {
-        var buildEngineType = buildEngine.GetType();
+        var buildEngineType = BuildEngine.GetType();
         var callbackField = buildEngineType.GetField("targetBuilderCallback", bindingFlags);
         if (callbackField == null)
         {
             throw new Exception("Could not extract targetBuilderCallback from " + buildEngineType.FullName);
         }
-        var callback = callbackField.GetValue(buildEngine);
+        var callback = callbackField.GetValue(BuildEngine);
         var targetCallbackType = callback.GetType();
         var instanceField = targetCallbackType.GetField("projectInstance", bindingFlags);
         if (instanceField == null)
@@ -47,7 +32,7 @@ public class BuildEnginePropertyExtractor
 
     public virtual string GetProjectPath()
     {
-        var projectFilePath = buildEngine.ProjectFileOfTaskNode;
+        var projectFilePath = BuildEngine.ProjectFileOfTaskNode;
         if (File.Exists(projectFilePath))
         {
             return projectFilePath;

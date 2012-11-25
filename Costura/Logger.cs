@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Text;
 using Microsoft.Build.Framework;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class Logger
 {
     public bool ErrorHasBeenRaised { get; set; }

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using Mono.Cecil;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ResourceEmbedder : IDisposable
 {
     InnerTask embedTask;
     List<Stream> streams;
     Logger logger;
 
-    [ImportingConstructor]
     public ResourceEmbedder(InnerTask embedTask, Logger logger)
     {
         streams = new List<Stream>();

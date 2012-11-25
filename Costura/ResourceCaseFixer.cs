@@ -1,20 +1,11 @@
 using System;
-using System.ComponentModel.Composition;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class ResourceCaseFixer
+public partial class InnerTask
 {
-    readonly InnerTask innerTask;
 
-    [ImportingConstructor]
-    public ResourceCaseFixer(Logger logger, InnerTask innerTask)
+    public void FixResourceCase()
     {
-        this.innerTask = innerTask;
-    }
-
-    public void Execute()
-    {
-        foreach (var resource in innerTask.Module.Resources)
+        foreach (var resource in Module.Resources)
         {
             if (resource.Name.StartsWith("costura.", StringComparison.InvariantCultureIgnoreCase))
             {

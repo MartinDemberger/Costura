@@ -1,11 +1,9 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
 public partial class InnerTask
 {
 
@@ -34,7 +32,7 @@ public partial class InnerTask
     {
         if (KeyFilePath == null)
         {
-            var projectFilePath = buildEnginePropertyExtractor.GetProjectPath();
+            var projectFilePath = GetProjectPath();
             if (!IsSignAssemblyTrue(projectFilePath))
             {
                 return;
