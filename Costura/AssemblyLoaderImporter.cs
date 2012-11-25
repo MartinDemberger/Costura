@@ -184,13 +184,15 @@ public partial class InnerTask
             }
             return Module.Import(methodReference.Resolve());
         }
-        if (operand is TypeReference)
+        var typeReference = operand as TypeReference;
+        if (typeReference != null)
         {
-            return Resolve((TypeReference) operand);
+            return Resolve(typeReference);
         }
-        if (operand is FieldReference)
+        var fieldReference = operand as FieldReference;
+        if (fieldReference != null)
         {
-            return targetType.Fields.First(f => f.Name == ((FieldReference) operand).Name);
+            return targetType.Fields.First(f => f.Name == fieldReference.Name);
         }
         return operand;
     }

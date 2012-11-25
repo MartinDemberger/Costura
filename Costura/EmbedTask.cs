@@ -36,6 +36,7 @@ namespace Costura
                     DeleteReferences = DeleteReferences,
                     CreateTemporaryAssemblies = CreateTemporaryAssemblies,
                     TargetPath = TargetPath,
+                    KeyFilePath = KeyFilePath,
                     MessageImportance = MessageImportance,
                     References = References,
                     ReferenceCopyLocalPaths = ReferenceCopyLocalPaths,
