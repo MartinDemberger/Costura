@@ -1,37 +1,23 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class ModuleLoaderImporter
+public partial class InnerTask
 {
-    InnerTask moduleReader;
-    AssemblyLoaderImporter assemblyLoaderImporter;
-    MsCoreReferenceFinder coreReferenceFinder;
-
-    [ImportingConstructor]
-    public ModuleLoaderImporter(InnerTask moduleReader, AssemblyLoaderImporter assemblyLoaderImporter, MsCoreReferenceFinder coreReferenceFinder)
-    {
-        this.moduleReader = moduleReader;
-        this.assemblyLoaderImporter = assemblyLoaderImporter;
-        this.coreReferenceFinder = coreReferenceFinder;
-    }
-
-    public void Execute()
+    public void ImportModuleLoader()
     {
         const MethodAttributes attributes = MethodAttributes.Static
                                             | MethodAttributes.SpecialName
                                             | MethodAttributes.RTSpecialName;
         var cctor = GetCctor(attributes);
         var il = cctor.Body.GetILProcessor();
-        il.Append(il.Create(OpCodes.Call, assemblyLoaderImporter.AttachMethod));
+        il.Append(il.Create(OpCodes.Call, AttachMethod));
         il.Append(il.Create(OpCodes.Ret));
     }
 
     MethodDefinition GetCctor(MethodAttributes attributes)
     {
-        var moduleClass = moduleReader.Module.Types.FirstOrDefault(x => x.Name == "<Module>");
+        var moduleClass = Module.Types.FirstOrDefault(x => x.Name == "<Module>");
         if (moduleClass == null)
         {
             throw new WeavingException("Found no module class!");
@@ -39,7 +25,7 @@ public class ModuleLoaderImporter
         var cctor = moduleClass.Methods.FirstOrDefault(x => x.Name == ".cctor");
         if (cctor == null)
         {
-            cctor = new MethodDefinition(".cctor", attributes, coreReferenceFinder.VoidTypeReference);
+            cctor = new MethodDefinition(".cctor", attributes, VoidTypeReference);
             moduleClass.Methods.Add(cctor);
         }
         return cctor;

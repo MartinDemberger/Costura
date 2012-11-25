@@ -105,10 +105,10 @@ public partial class InnerTask
                 return;
             }
 
-            container.GetExportedValue<MsCoreReferenceFinder>().Execute();
+            FindMsCoreReferences();
 
-            container.GetExportedValue<AssemblyLoaderImporter>().Execute();
-            container.GetExportedValue<ModuleLoaderImporter>().Execute();
+            ImportAssemblyLoader();
+            ImportModuleLoader();
             container.GetExportedValue<DependencyFinder>().Execute();
             container.GetExportedValue<ProjectKeyReader>().Execute();
             container.GetExportedValue<ResourceCaseFixer>().Execute();

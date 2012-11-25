@@ -1,30 +1,19 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class AssemblyLoaderImporter
+public partial class InnerTask
 {
-    AssemblyResolver assemblyResolver;
-    InnerTask embedTask;
-    ConstructorInfo instructionConstructorInfo;
+    ConstructorInfo instructionConstructorInfo = typeof (Instruction).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {typeof (OpCode), typeof (object)}, null);
     TypeDefinition targetType;
     TypeDefinition sourceType;
     public MethodDefinition AttachMethod;
 
-    [ImportingConstructor]
-    public AssemblyLoaderImporter(AssemblyResolver assemblyResolver, InnerTask embedTask)
-    {
-        instructionConstructorInfo = typeof (Instruction).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {typeof (OpCode), typeof (object)}, null);
-        this.assemblyResolver = assemblyResolver;
-        this.embedTask = embedTask;
-    }
 
-    public void Execute()
+    public void ImportAssemblyLoader()
     {
-        var existingILTemplate = embedTask.Module.GetAllTypeDefinitions().FirstOrDefault(x => x.FullName == "Costura.AssemblyLoader");
+        var existingILTemplate = Module.GetAllTypeDefinitions().FirstOrDefault(x => x.FullName == "Costura.AssemblyLoader");
         if (existingILTemplate != null)
         {
             AttachMethod = existingILTemplate.Methods.First(x => x.Name == "Attach");
@@ -34,7 +23,7 @@ public class AssemblyLoaderImporter
 
         var moduleDefinition = GetTemplateModuleDefinition();
 
-        if (!embedTask.CreateTemporaryAssemblies)
+        if (!CreateTemporaryAssemblies)
         {
             sourceType = moduleDefinition.Types.First(x => x.Name == "ILTemplate");
         }
@@ -44,7 +33,7 @@ public class AssemblyLoaderImporter
         }
 
         targetType = new TypeDefinition("Costura", "AssemblyLoader", sourceType.Attributes, Resolve(sourceType.BaseType));
-        embedTask.Module.Types.Add(targetType);
+        Module.Types.Add(targetType);
         CopyFields(sourceType);
         CopyMethod(sourceType.Methods.First(x => x.Name == "ResolveAssembly"));
 
@@ -66,7 +55,7 @@ public class AssemblyLoaderImporter
                                        AssemblyResolver = assemblyResolver,
                                    };
 
-        using (var resourceStream = typeof (AssemblyLoaderImporter).Assembly.GetManifestResourceStream("Costura.Template.dll"))
+        using (var resourceStream = typeof (InnerTask).Assembly.GetManifestResourceStream("Costura.Template.dll"))
         {
             return ModuleDefinition.ReadModule(resourceStream, readerParameters);
         }
@@ -76,7 +65,7 @@ public class AssemblyLoaderImporter
     TypeReference Resolve(TypeReference baseType)
     {
         var typeDefinition = baseType.Resolve();
-        var typeReference = embedTask.Module.Import(typeDefinition);
+        var typeReference = Module.Import(typeDefinition);
         if (baseType is ArrayType)
         {
             return new ArrayType(typeReference);
@@ -96,7 +85,7 @@ public class AssemblyLoaderImporter
         if (templateMethod.IsPInvokeImpl)
         {
             var moduleRef = new ModuleReference(templateMethod.PInvokeInfo.Module.Name);
-            embedTask.Module.ModuleReferences.Add(moduleRef);
+            Module.ModuleReferences.Add(moduleRef);
             newMethod.PInvokeInfo = new PInvokeInfo(templateMethod.PInvokeInfo.Attributes, templateMethod.PInvokeInfo.EntryPoint, moduleRef);
         }
 
@@ -193,7 +182,7 @@ public class AssemblyLoaderImporter
                 }
                 return mr;
             }
-            return embedTask.Module.Import(methodReference.Resolve());
+            return Module.Import(methodReference.Resolve());
         }
         if (operand is TypeReference)
         {

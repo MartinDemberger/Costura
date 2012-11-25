@@ -1,23 +1,11 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using Mono.Cecil;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class MsCoreReferenceFinder
+public partial class InnerTask
 {
-    IAssemblyResolver assemblyResolver;
-    InnerTask innerTask;
     public TypeReference VoidTypeReference;
 
-    [ImportingConstructor]
-    public MsCoreReferenceFinder(IAssemblyResolver assemblyResolver, InnerTask innerTask)
-    {
-        this.assemblyResolver = assemblyResolver;
-        this.innerTask = innerTask;
-    }
-
-
-    public void Execute()
+    public void FindMsCoreReferences()
     {
         var msCoreLibDefinition = assemblyResolver.Resolve("mscorlib");
         var msCoreTypes = msCoreLibDefinition.MainModule.Types;
@@ -25,23 +13,22 @@ public class MsCoreReferenceFinder
         var objectDefinition = msCoreTypes.FirstOrDefault(x => x.Name == "Object");
         if (objectDefinition == null)
         {
-            ExecuteWinRT();
+            FindWinRTMsCoreReferences();
             return;
         }
-        var module = innerTask.Module;
 
         var voidDefinition = msCoreTypes.First(x => x.Name == "Void");
-        VoidTypeReference = module.Import(voidDefinition);
+        VoidTypeReference = Module.Import(voidDefinition);
 
 
     }
 
-    public void ExecuteWinRT()
+    public void FindWinRTMsCoreReferences()
     {
         var systemRuntime = assemblyResolver.Resolve("System.Runtime");
         var systemRuntimeTypes = systemRuntime.MainModule.Types;
         var voidDefinition = systemRuntimeTypes.First(x => x.Name == "Void");
-        VoidTypeReference = innerTask.Module.Import(voidDefinition);
+        VoidTypeReference = Module.Import(voidDefinition);
     }
 
 
