@@ -100,8 +100,7 @@ public partial class InnerTask
             assemblyResolver.Execute();
             ReadModule();
 
-            var fileChangedChecker = container.GetExportedValue<FileChangedChecker>();
-            if (!fileChangedChecker.ShouldStart())
+            if (!ShouldStart())
             {
                 return;
             }
