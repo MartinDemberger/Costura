@@ -5,15 +5,15 @@ using Mono.Cecil;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class MsCoreReferenceFinder
 {
-    ModuleReader moduleReader;
     IAssemblyResolver assemblyResolver;
+    InnerTask innerTask;
     public TypeReference VoidTypeReference;
 
     [ImportingConstructor]
-    public MsCoreReferenceFinder(ModuleReader moduleReader, IAssemblyResolver assemblyResolver)
+    public MsCoreReferenceFinder(IAssemblyResolver assemblyResolver, InnerTask innerTask)
     {
-        this.moduleReader = moduleReader;
         this.assemblyResolver = assemblyResolver;
+        this.innerTask = innerTask;
     }
 
 
@@ -28,7 +28,7 @@ public class MsCoreReferenceFinder
             ExecuteWinRT();
             return;
         }
-        var module = moduleReader.Module;
+        var module = innerTask.Module;
 
         var voidDefinition = msCoreTypes.First(x => x.Name == "Void");
         VoidTypeReference = module.Import(voidDefinition);
@@ -41,7 +41,7 @@ public class MsCoreReferenceFinder
         var systemRuntime = assemblyResolver.Resolve("System.Runtime");
         var systemRuntimeTypes = systemRuntime.MainModule.Types;
         var voidDefinition = systemRuntimeTypes.First(x => x.Name == "Void");
-        VoidTypeReference = moduleReader.Module.Import(voidDefinition);
+        VoidTypeReference = innerTask.Module.Import(voidDefinition);
     }
 
 

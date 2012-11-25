@@ -6,12 +6,12 @@ using Mono.Cecil.Cil;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ModuleLoaderImporter
 {
-    ModuleReader moduleReader;
+    InnerTask moduleReader;
     AssemblyLoaderImporter assemblyLoaderImporter;
     MsCoreReferenceFinder coreReferenceFinder;
 
     [ImportingConstructor]
-    public ModuleLoaderImporter(ModuleReader moduleReader, AssemblyLoaderImporter assemblyLoaderImporter, MsCoreReferenceFinder coreReferenceFinder)
+    public ModuleLoaderImporter(InnerTask moduleReader, AssemblyLoaderImporter assemblyLoaderImporter, MsCoreReferenceFinder coreReferenceFinder)
     {
         this.moduleReader = moduleReader;
         this.assemblyLoaderImporter = assemblyLoaderImporter;

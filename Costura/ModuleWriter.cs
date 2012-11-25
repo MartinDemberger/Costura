@@ -8,15 +8,13 @@ using Mono.Cecil.Pdb;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ModuleWriter
 {
-    ModuleReader moduleReader;
     ProjectKeyReader projectKeyReader;
     Logger logger;
     InnerTask config;
 
     [ImportingConstructor]
-    public ModuleWriter(ModuleReader moduleReader, ProjectKeyReader projectKeyReader, Logger logger, InnerTask config)
+    public ModuleWriter(ProjectKeyReader projectKeyReader, Logger logger, InnerTask config)
     {
-        this.moduleReader = moduleReader;
         this.projectKeyReader = projectKeyReader;
         this.logger = logger;
         this.config = config;
@@ -59,6 +57,6 @@ public class ModuleWriter
                                  WriteSymbols = true,
                                  SymbolWriterProvider = GetSymbolWriterProvider(config.TargetPath)
                              };
-        moduleReader.Module.Write(targetPath, parameters);
+        config.Module.Write(targetPath, parameters);
     }
 }

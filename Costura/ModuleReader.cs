@@ -1,36 +1,13 @@
-﻿using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.IO;
 using Mono.Cecil;
 
-[Export, PartCreationPolicy(CreationPolicy.Shared)]
-public class ModuleReader
+public partial class InnerTask
 {
-    InnerTask config;
-    IAssemblyResolver assemblyResolver;
     public ModuleDefinition Module { get; set; }
-    Logger logger;
 
-    [ImportingConstructor]
-    public ModuleReader(InnerTask config, IAssemblyResolver assemblyResolver, Logger logger)
-    {
-        this.logger = logger;
-        this.config = config;
-        this.assemblyResolver = assemblyResolver;
-    }
 
     FileStream GetSymbolReaderProvider(string targetPath)
     {
-        //if (targetPathFinder.TargetPathDerivedFromBuildEngine)
-        //{
-        //    var debugSymbolsIntermediatePath = buildEnginePropertyExtractor.GetEnvironmentVariable("_DebugSymbolsIntermediatePath", false).FirstOrDefault();
-        //    if (debugSymbolsIntermediatePath != null && File.Exists(debugSymbolsIntermediatePath))
-        //    {
-        //        logger.LogMessage(string.Format("\tFound debug symbols (using build engine) at '{0}'", debugSymbolsIntermediatePath));
-        //        return File.OpenRead(debugSymbolsIntermediatePath);
-        //    }
-        //}
-
-
         var pdbPath = Path.ChangeExtension(targetPath, "pdb");
         if (File.Exists(pdbPath))
         {
@@ -49,9 +26,9 @@ public class ModuleReader
         return null;
     }
 
-    public void Execute()
+    public void ReadModule()
     {
-        using (var symbolStream = GetSymbolReaderProvider(config.TargetPath))
+        using (var symbolStream = GetSymbolReaderProvider(TargetPath))
         {
             var readSymbols = symbolStream != null;
             var readerParameters = new ReaderParameters
@@ -60,7 +37,7 @@ public class ModuleReader
                                            ReadSymbols = readSymbols,
                                            SymbolStream = symbolStream,
                                        };
-            Module = ModuleDefinition.ReadModule(config.TargetPath, readerParameters);
+            Module = ModuleDefinition.ReadModule(TargetPath, readerParameters);
         }
     }
 }

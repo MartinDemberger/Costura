@@ -7,23 +7,23 @@ using Mono.Cecil;
 public class FileChangedChecker
 {
     Logger logger;
-    ModuleReader moduleReader;
+    InnerTask innerTask;
 
     [ImportingConstructor]
-    public FileChangedChecker(Logger logger, ModuleReader moduleReader)
+    public FileChangedChecker(Logger logger, InnerTask innerTask)
     {
         this.logger = logger;
-        this.moduleReader = moduleReader;
+        this.innerTask = innerTask;
     }
 
     public bool ShouldStart()
     {
-        if (moduleReader.Module.Types.Any(x => x.Name == "ProcessedByCostura"))
+        if (innerTask.Module.Types.Any(x => x.Name == "ProcessedByCostura"))
         {
             logger.LogMessage("\tDid not process because file has already been processed");
             return false;
         }
-        moduleReader.Module.Types.Add(new TypeDefinition(null, "ProcessedByCostura", TypeAttributes.NotPublic | TypeAttributes.Abstract | TypeAttributes.Interface));
+        innerTask.Module.Types.Add(new TypeDefinition(null, "ProcessedByCostura", TypeAttributes.NotPublic | TypeAttributes.Abstract | TypeAttributes.Interface));
         return true;
     }
 }

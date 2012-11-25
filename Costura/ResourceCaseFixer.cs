@@ -4,17 +4,17 @@ using System.ComponentModel.Composition;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ResourceCaseFixer
 {
-    ModuleReader moduleReader;
+    readonly InnerTask innerTask;
 
     [ImportingConstructor]
-    public ResourceCaseFixer(DependencyFinder dependencyFinder, ModuleReader moduleReader, Logger logger)
+    public ResourceCaseFixer(DependencyFinder dependencyFinder, Logger logger, InnerTask innerTask)
     {
-        this.moduleReader = moduleReader;
+        this.innerTask = innerTask;
     }
 
     public void Execute()
     {
-        foreach (var resource in moduleReader.Module.Resources)
+        foreach (var resource in innerTask.Module.Resources)
         {
             if (resource.Name.StartsWith("costura.", StringComparison.InvariantCultureIgnoreCase))
             {

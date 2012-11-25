@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Build.Framework;
 
-public class InnerTask
+public partial class InnerTask
 {
     public bool Overwrite;
     public bool IncludeDebugSymbols;
@@ -23,6 +23,7 @@ public class InnerTask
     public List<string> ReferenceCopyLocalPaths;
     Logger logger;
     static Version version;
+    AssemblyResolver assemblyResolver;
 
     static InnerTask()
     {
@@ -95,9 +96,9 @@ public class InnerTask
             logger.LogMessage(string.Format("\tTargetPath: {0}", TargetPath));
 
 
-            container.GetExportedValue<AssemblyResolver>().Execute();
-            var moduleReader = container.GetExportedValue<ModuleReader>();
-            moduleReader.Execute();
+            assemblyResolver = container.GetExportedValue<AssemblyResolver>();
+            assemblyResolver.Execute();
+            ReadModule();
 
             var fileChangedChecker = container.GetExportedValue<FileChangedChecker>();
             if (!fileChangedChecker.ShouldStart())

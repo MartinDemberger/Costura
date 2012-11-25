@@ -8,17 +8,15 @@ using Mono.Cecil;
 public class ResourceEmbedder : IDisposable
 {
     DependencyFinder dependencyFinder;
-    ModuleReader moduleReader;
     InnerTask embedTask;
     List<Stream> streams;
     Logger logger;
 
     [ImportingConstructor]
-    public ResourceEmbedder(DependencyFinder dependencyFinder, ModuleReader moduleReader, InnerTask embedTask, Logger logger)
+    public ResourceEmbedder(DependencyFinder dependencyFinder, InnerTask embedTask, Logger logger)
     {
         streams = new List<Stream>();
         this.dependencyFinder = dependencyFinder;
-        this.moduleReader = moduleReader;
         this.embedTask = embedTask;
         this.logger = logger;
     }
@@ -47,7 +45,7 @@ public class ResourceEmbedder : IDisposable
         var fileStream = File.OpenRead(fullPath);
         streams.Add(fileStream);
         var resource = new EmbeddedResource("costura." + Path.GetFileName(fullPath).ToLowerInvariant(), ManifestResourceAttributes.Private, fileStream);
-        moduleReader.Module.Resources.Add(resource);
+        embedTask.Module.Resources.Add(resource);
     }
 
     public void Dispose()
