@@ -6,13 +6,13 @@ using Mono.Cecil;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class ModuleReader
 {
-    EmbedTask config;
+    InnerTask config;
     IAssemblyResolver assemblyResolver;
     public ModuleDefinition Module { get; set; }
     Logger logger;
 
     [ImportingConstructor]
-    public ModuleReader(EmbedTask config, IAssemblyResolver assemblyResolver, Logger logger)
+    public ModuleReader(InnerTask config, IAssemblyResolver assemblyResolver, Logger logger)
     {
         this.logger = logger;
         this.config = config;

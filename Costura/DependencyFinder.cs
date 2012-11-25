@@ -7,12 +7,12 @@ using Microsoft.Build.Framework;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class DependencyFinder
 {
-    EmbedTask embedTask;
+    InnerTask embedTask;
     BuildEnginePropertyExtractor buildEnginePropertyExtractor;
     public List<string> Dependencies;
 
     [ImportingConstructor]
-    public DependencyFinder(EmbedTask embedTask, IBuildEngine buildEngine, BuildEnginePropertyExtractor buildEnginePropertyExtractor)
+    public DependencyFinder(InnerTask embedTask, IBuildEngine buildEngine, BuildEnginePropertyExtractor buildEnginePropertyExtractor)
     {
         this.embedTask = embedTask;
         this.buildEnginePropertyExtractor = buildEnginePropertyExtractor;

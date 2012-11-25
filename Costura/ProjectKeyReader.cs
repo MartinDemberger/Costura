@@ -10,10 +10,10 @@ using Costura;
 public class ProjectKeyReader
 {
     BuildEnginePropertyExtractor buildEnginePropertyExtractor;
-    EmbedTask config;
+    InnerTask config;
 
     [ImportingConstructor]
-    public ProjectKeyReader(BuildEnginePropertyExtractor buildEnginePropertyExtractor, EmbedTask config)
+    public ProjectKeyReader(BuildEnginePropertyExtractor buildEnginePropertyExtractor, InnerTask config)
     {
         this.buildEnginePropertyExtractor = buildEnginePropertyExtractor;
         this.config = config;

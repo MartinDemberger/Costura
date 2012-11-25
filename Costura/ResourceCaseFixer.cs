@@ -8,7 +8,7 @@ public class ResourceCaseFixer
     ModuleReader moduleReader;
 
     [ImportingConstructor]
-    public ResourceCaseFixer(DependencyFinder dependencyFinder, ModuleReader moduleReader, EmbedTask embedTask, Logger logger)
+    public ResourceCaseFixer(DependencyFinder dependencyFinder, ModuleReader moduleReader, Logger logger)
     {
         this.moduleReader = moduleReader;
     }

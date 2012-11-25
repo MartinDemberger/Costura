@@ -8,11 +8,11 @@ using Costura;
 public class ReferenceDeleter
 {
     DependencyFinder dependencyFinder;
-    EmbedTask embedTask;
+    InnerTask embedTask;
     Logger logger;
 
     [ImportingConstructor]
-    public ReferenceDeleter(DependencyFinder dependencyFinder, EmbedTask embedTask, Logger logger)
+    public ReferenceDeleter(DependencyFinder dependencyFinder, InnerTask embedTask, Logger logger)
     {
         this.dependencyFinder = dependencyFinder;
         this.embedTask = embedTask;

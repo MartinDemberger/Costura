@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
+    <IntermediateDir>$(ProjectDir)$(IntermediateOutputPath)</IntermediateDir>
+    <CosturaMessageImportance Condition="$(CosturaMessageImportance) == '' Or $(CosturaMessageImportance) == '*Undefined*'">Low</CosturaMessageImportance>
+    <CosturaOverwrite Condition="$(CosturaOverwrite) == '' Or $(CosturaOverwrite) == '*Undefined*'">true</CosturaOverwrite>
+    <CosturaCreateTemporaryAssemblies Condition="$(CosturaCreateTemporaryAssemblies) == '' Or $(CosturaCreateTemporaryAssemblies) == '*Undefined*'">false</CosturaCreateTemporaryAssemblies>
+    <CosturaDeleteReferences Condition="$(CosturaDeleteReferences) == '' Or $(CosturaDeleteReferences) == '*Undefined*'">true</CosturaDeleteReferences>
+    <CosturaIncludeDebugSymbols Condition="$(CosturaIncludeDebugSymbols) == '' Or $(CosturaIncludeDebugSymbols) == '*Undefined*'">true</CosturaIncludeDebugSymbols>
+  </PropertyGroup>
+  <UsingTask 
+	  TaskName="Costura.EmbedTask" 
+	  AssemblyFile="$(MSBuildThisFileDirectory)Costura.dll" />
+  <Target 
+	  AfterTargets="AfterBuild"
+	  Name="CosturaTarget">
+    <Costura.EmbedTask 
+		  AssemblyPath = "$(TargetPath)" 
+		  IntermediateDir = "$(IntermediateDir)"
+		  KeyFilePath = "$(KeyOriginatorFile)" 
+		  MessageImportance = "$(CosturaMessageImportance)"
+		  ProjectPath = "$(ProjectPath)" 
+		  SolutionDir = "$(SolutionDir)" 
+		  References = "@(ReferencePath)" 
+		  Overwrite = "$(CosturaOverwrite)"
+		  IncludeDebugSymbols = "$(CosturaIncludeDebugSymbols)"
+		  DeleteReferences = "$(CosturaDeleteReferences)"
+		  CreateTemporaryAssemblies = "$(CosturaCreateTemporaryAssemblies)"
+      />
+  </Target>
+
+
+  <!--Support for ncrunch-->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)*.*" />
+  </ItemGroup>
+  
+</Project>
+
+

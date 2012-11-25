@@ -12,10 +12,10 @@ public class ModuleWriter
     ModuleReader moduleReader;
     ProjectKeyReader projectKeyReader;
     Logger logger;
-    EmbedTask config;
+    InnerTask config;
 
     [ImportingConstructor]
-    public ModuleWriter(ModuleReader moduleReader, ProjectKeyReader projectKeyReader, Logger logger, EmbedTask config)
+    public ModuleWriter(ModuleReader moduleReader, ProjectKeyReader projectKeyReader, Logger logger, InnerTask config)
     {
         this.moduleReader = moduleReader;
         this.projectKeyReader = projectKeyReader;

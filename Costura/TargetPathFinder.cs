@@ -7,12 +7,12 @@ using Costura;
 [Export, PartCreationPolicy(CreationPolicy.Shared)]
 public class TargetPathFinder
 {
-    EmbedTask weavingTask;
+    InnerTask weavingTask;
     BuildEnginePropertyExtractor buildEnginePropertyExtractor;
     Logger logger;
 
     [ImportingConstructor]
-    public TargetPathFinder(EmbedTask weavingTask, BuildEnginePropertyExtractor buildEnginePropertyExtractor, Logger logger)
+    public TargetPathFinder(InnerTask weavingTask, BuildEnginePropertyExtractor buildEnginePropertyExtractor, Logger logger)
     {
         this.weavingTask = weavingTask;
         this.buildEnginePropertyExtractor = buildEnginePropertyExtractor;

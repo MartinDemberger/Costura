@@ -10,12 +10,12 @@ public class ResourceEmbedder : IDisposable
 {
     DependencyFinder dependencyFinder;
     ModuleReader moduleReader;
-    EmbedTask embedTask;
+    InnerTask embedTask;
     List<Stream> streams;
     Logger logger;
 
     [ImportingConstructor]
-    public ResourceEmbedder(DependencyFinder dependencyFinder, ModuleReader moduleReader, EmbedTask embedTask, Logger logger)
+    public ResourceEmbedder(DependencyFinder dependencyFinder, ModuleReader moduleReader, InnerTask embedTask, Logger logger)
     {
         streams = new List<Stream>();
         this.dependencyFinder = dependencyFinder;

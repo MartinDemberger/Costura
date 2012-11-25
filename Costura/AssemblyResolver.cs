@@ -12,14 +12,14 @@ using Mono.Cecil;
 [PartCreationPolicy(CreationPolicy.Shared)]
 public class AssemblyResolver : IAssemblyResolver
 {
-    EmbedTask config;
+    InnerTask config;
     Logger logger;
     BuildEnginePropertyExtractor buildEnginePropertyExtractor;
     Dictionary<string, string> references;
     Dictionary<string, AssemblyDefinition> assemblyDefinitionCache;
 
     [ImportingConstructor]
-    public AssemblyResolver(EmbedTask config, Logger logger, BuildEnginePropertyExtractor buildEnginePropertyExtractor)
+    public AssemblyResolver(InnerTask config, Logger logger, BuildEnginePropertyExtractor buildEnginePropertyExtractor)
     {
         this.config = config;
         this.logger = logger;

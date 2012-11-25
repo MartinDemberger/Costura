@@ -10,14 +10,14 @@ public class AssemblyLoaderImporter
 {
     ModuleReader moduleReader;
     AssemblyResolver assemblyResolver;
-    EmbedTask embedTask;
+    InnerTask embedTask;
     ConstructorInfo instructionConstructorInfo;
     TypeDefinition targetType;
     TypeDefinition sourceType;
     public MethodDefinition AttachMethod;
 
     [ImportingConstructor]
-    public AssemblyLoaderImporter(ModuleReader moduleReader, AssemblyResolver assemblyResolver, EmbedTask embedTask)
+    public AssemblyLoaderImporter(ModuleReader moduleReader, AssemblyResolver assemblyResolver, InnerTask embedTask)
     {
         instructionConstructorInfo = typeof (Instruction).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] {typeof (OpCode), typeof (object)}, null);
         this.moduleReader = moduleReader;

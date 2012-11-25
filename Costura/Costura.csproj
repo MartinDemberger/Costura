@@ -75,6 +75,7 @@
     <Compile Include="CecilExtensions.cs" />
     <Compile Include="DependencyFinder.cs" />
     <Compile Include="FileChangedChecker.cs" />
+    <Compile Include="InnerTask.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ModuleLoaderImporter.cs" />
     <Compile Include="EmbedTask.cs" />
